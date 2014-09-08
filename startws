@@ -3,7 +3,7 @@
 #Name of the VM in Virtualbox
 VM_NAME="LazyRuby"
 #Mount VM FS on local machine
-MOUNTDIR="/Users/z3yo/Websites"
+MOUNTDIR="$HOME/Websites"
 #Name of the user on the VM OS
 VM_USER="z3yo"
 #SSH Port of the VM
@@ -17,7 +17,7 @@ if [ $# == 0 ]; then
 	#Be sure the mountdir is not already mounted
 	umount ${MOUNTDIR}
 	#Mount the system user home FS on the local dir
-	sshfs ${VM_USER}@127.0.0.1:/home/${VM_USER} ${MOUNTDIR} -p ${SSH_PORT} -o auto_cache,reconnect,defer_permissions,negative_vncache,volname=${VM_NAME}
+	sshfs ${VM_USER}@127.0.0.1:/home/${VM_USER} ${MOUNTDIR} -p ${SSH_PORT} -o auto_cache,reconnect,defer_permissions,negative_vncache,volname="${VM_NAME}"
 	#Wait few sec
 	sleep 3
 	#Connect the machine
@@ -26,7 +26,7 @@ else
 	case $1 in
 		"fs") 
 			#"Mount FS"
-			sshfs ${VM_USER}@127.0.0.1:/home/${VM_USER} ${MOUNTDIR} -p ${SSH_PORT} -o auto_cache,reconnect,defer_permissions,negative_vncache,volname=${VM_NAME}
+			sshfs ${VM_USER}@127.0.0.1:/home/${VM_USER} ${MOUNTDIR} -p ${SSH_PORT} -o auto_cache,reconnect,defer_permissions,negative_vncache,volname="${VM_NAME}"
 			;;
 		"ssh") 
 			#"Connect SSH"
