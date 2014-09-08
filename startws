@@ -1,28 +1,40 @@
 #!/bin/sh
 
 #Name of the VM in Virtualbox
-VM_NAME="Lazyweb"
-
+VM_NAME="LazyRuby"
 #Mount VM FS on local machine
 MOUNTDIR="/Users/z3yo/Websites"
-
 #Name of the user on the VM OS
 VM_USER="z3yo"
-
 #SSH Port of the VM
-SSH_PORT=2222
+SSH_PORT=6622
 
-
-#Start the VM
-VBoxManage startvm ${VM_NAME}
-#Sleep 30 seconds, time for the VM to start
-sleep 30 
-#Be sure the mountdir is not already mounted
-umount ${MOUNTDIR}
-#Mount the system user home FS on the local dir
-sshfs ${VM_USER}@127.0.0.1:/home/${VM_USER} ${MOUNTDIR} -p ${SSH_PORT} -o auto_cache,reconnect,defer_permissions,negative_vncache,volname='${VM_NAME}'
-#Wait few sec
-sleep 3
-#Connect the machine
-ssh -p ${SSH_PORT} ${VM_USER}@127.0.0.1
-
+if [ $# == 0 ]; then
+	#Start the VM
+	VBoxManage startvm ${VM_NAME}
+	#Sleep 30 seconds, time for the VM to start
+	sleep 30 
+	#Be sure the mountdir is not already mounted
+	umount ${MOUNTDIR}
+	#Mount the system user home FS on the local dir
+	sshfs ${VM_USER}@127.0.0.1:/home/${VM_USER} ${MOUNTDIR} -p ${SSH_PORT} -o auto_cache,reconnect,defer_permissions,negative_vncache,volname=${VM_NAME}
+	#Wait few sec
+	sleep 3
+	#Connect the machine
+	ssh -p ${SSH_PORT} ${VM_USER}@127.0.0.1
+else
+	case $1 in
+		"fs") 
+			#"Mount FS"
+			sshfs ${VM_USER}@127.0.0.1:/home/${VM_USER} ${MOUNTDIR} -p ${SSH_PORT} -o auto_cache,reconnect,defer_permissions,negative_vncache,volname=${VM_NAME}
+			;;
+		"ssh") 
+			#"Connect SSH"
+			ssh -p ${SSH_PORT} ${VM_USER}@127.0.0.1
+			;;
+		*) 
+			echo "Mooo! RTFM dude!"
+			sleep 1
+			;;
+	esac
+fi
